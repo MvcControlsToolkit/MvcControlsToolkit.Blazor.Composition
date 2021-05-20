@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Configurations>Debug;Release;Composition</Configurations>
+  </PropertyGroup>
+
+  
+
+  <PropertyGroup Condition="'$(Configuration)'=='Composition'">
+    <DefineConstants>TRACE;COMPOSITION</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" PrivateAssets="all" />
+    <PackageReference Include="MvcControlsToolkit.Blazor.Composition" Version="1.0.1.1-rc1" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\KernelApp.Shared.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(Configuration)'=='Composition'">
+    <ProjectReference Include="..\..\Module2Library\Module2Library.csproj" />
+    <!--<BlazorWebAssemblyLazyLoad Include="Module2Library.dll" />-->
+  </ItemGroup>
+
+</Project>

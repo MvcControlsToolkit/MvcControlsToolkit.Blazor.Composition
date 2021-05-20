@@ -1,0 +1,15 @@
+﻿@page "/module1/examplemenupage"
+@inject ServiceExample service
+<h3>This is an example imported page added through an imported menu item</h3>
+<p>
+    It comes from <strong>Module1Library</strong>, and its link appears in the main menu as soon as module is imported
+</p>
+<p>
+    Message from an imported service:
+</p>
+<p>
+    @service.GetMessage
+</p>
+@code {
+
+}

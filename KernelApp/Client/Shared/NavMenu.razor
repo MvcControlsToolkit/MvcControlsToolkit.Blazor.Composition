@@ -1,0 +1,90 @@
+﻿@inject MenuService menuService 
+@using MvcControlsToolkit.Blazor.Composition
+@implements IDisposable
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">KernelApp</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="module1/examplepage">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Test external page
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="testrole">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Test external role
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="module2/examplepage">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Test build external page
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="buildtestrole">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Test build external role
+            </NavLink>
+        </li>
+        @if (currItems != null)
+        {
+            foreach (var item in currItems)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="@item.URL">
+                        <span class="oi oi-plus" aria-hidden="true"></span>
+                        @item.Text()
+                    </NavLink>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private List<PageRole> currItems;
+    protected override void OnInitialized()
+    {
+        currItems = menuService.Get("MainMenu");
+        menuService.MenuChanged += menuChanges;
+    }
+    public void Dispose()
+    {
+        menuService.MenuChanged -= menuChanges;
+    }
+    private async Task menuChanges(string role, List<PageRole> items)
+    {
+        if(role == "MainMenu")
+        {
+            currItems = items;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

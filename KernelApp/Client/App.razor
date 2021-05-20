@@ -1,0 +1,45 @@
+@using System.Reflection
+@using MvcControlsToolkit.Blazor.Composition
+@inject IDynamicComposition moduleLoader
+@inject IStaticComposition staticRegister
+
+<Router AppAssembly="@typeof(Program).Assembly"
+        AdditionalAssemblies="lazyLoadedAssemblies"
+        OnNavigateAsync="OnNavigateAsync">
+    <Navigating>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <div class="alert alert-info" role="alert">
+                <p>Loading the requested page&hellip;</p>
+            </div>
+        </LayoutView>
+    </Navigating>
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData"
+                   DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    private List<Assembly> lazyLoadedAssemblies =
+        new List<Assembly>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        moduleLoader.AddLoadedModules(lazyLoadedAssemblies);
+        staticRegister.AddLoadedModules(lazyLoadedAssemblies);
+    }
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        var res = await moduleLoader
+            .VerifyLoadPrefix(args.Path, args.CancellationToken);
+        if (res != null && res.Count > 0)
+            lazyLoadedAssemblies.AddRange(res);
+    }
+}

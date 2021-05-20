@@ -1,0 +1,16 @@
+﻿<div class="my-component">
+    <p>
+        This Blazor component is defined in the <strong>Module1Library</strong> and received this value for <strong>ExampleParameter</strong>:
+    </p>
+    <p>
+        @ExampleParameter
+    </p>
+</div>
+
+@code {
+
+    [Parameter]
+    public  string ExampleParameter { get; set; }
+
+
+}
